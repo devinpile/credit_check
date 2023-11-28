@@ -33,7 +33,11 @@ def is_valid?(cc_num)
         card_number_arr[index] = num * 2 if index.odd? 
     end
     card_number_arr.map! { |num| num > 9 ? num - 9 : num }
-    card_number_arr.sum % 10 == 0
+    if card_number_arr.sum % 10 == 0
+        "The number #{cc_num} is valid!"
+    else
+        "The number #{cc_num} is invalid!"
+    end
 end
 
 # Output
