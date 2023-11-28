@@ -27,7 +27,7 @@ card_number = "5541808923795240"
     #check to see if the sum from the last step is a multiple of ten using modulo operator (%)
     #if so, return the valid output string - if not, return the invalid output string
 
-def is_valid?(cc_num)
+def luhn_algorithm(cc_num)
     card_number_arr = cc_num.to_i.digits 
     card_number_arr.each_with_index do |num,index|
         card_number_arr[index] = num * 2 if index.odd? 
@@ -44,7 +44,7 @@ end
 ## If it is valid, print "The number [card number] is valid!"
 ## If it is invalid, print "The number [card number] is invalid!"
 
-p is_valid?(card_number)
+# p luhn_algorithm(card_number)
 
 #Valid:
 test1 = 5541808923795240
@@ -56,9 +56,37 @@ test4 = 5541801923795240
 test5 = 4024007106512380
 test6 = 6011797668868728
 
-p is_valid?(test1)
-p is_valid?(test2)
-p is_valid?(test3)
-p is_valid?(test4)
-p is_valid?(test5)
-p is_valid?(test6)
+# p luhn_algorithm(test2)
+# p luhn_algorithm(test3)
+# p luhn_algorithm(test1)
+# p luhn_algorithm(test4)
+# p luhn_algorithm(test5)
+# p luhn_algorithm(test6)
+
+class Credit_card
+    attr_reader :card_number, :limit 
+
+    def initialize(card_number, limit)
+        @card_number = card_number
+        @limit = limit
+    end
+
+    def is_valid?
+        card_number_arr = @card_number.to_i.digits 
+        card_number_arr.each_with_index do |num,index|
+            card_number_arr[index] = num * 2 if index.odd? 
+        end
+        card_number_arr.map! { |num| num > 9 ? num - 9 : num }
+        card_number_arr.sum % 10 == 0
+    end
+
+    def last_four
+        arr = @card_number.chars 
+        [arr[-4],arr[-3],arr[-2],arr[-1]].join('')
+    end
+end
+
+p Credit_card.new("5541808923795240", 15000).card_number # expect "5541808923795240"
+p Credit_card.new("5541808923795240", 15000).limit # expect 15000
+p Credit_card.new("5541808923795240", 15000).is_valid? # expect true
+p Credit_card.new("5541808923795240", 15000).last_four # expect "5240"
