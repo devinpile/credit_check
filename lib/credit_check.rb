@@ -28,12 +28,35 @@ card_number = "5541808923795240"
     #if so, return the valid output string - if not, return the invalid output string
 
 def luhn_algorithm(cc_num)
-    card_number_arr = cc_num.to_i.digits 
-    card_number_arr.each_with_index do |num,index|
-        card_number_arr[index] = num * 2 if index.odd? 
+    formatted_cc_num = format(cc_num)
+    adjusted_cc_num = double_every_other_index_position(formatted_cc_num)
+    re_adjusted_cc_num = format_to_single_digit(adjusted_cc_num)
+    cc_check = check_validity(re_adjusted_cc_num)
+    response(cc_check, cc_num)
+end
+
+def format(card_number)
+    card_number.chars.map do |num|
+        num.to_i
     end
-    card_number_arr.map! { |num| num > 9 ? num - 9 : num }
-    if card_number_arr.sum % 10 == 0
+end
+
+def double_every_other_index_position(array)
+    array.each_with_index do |num,index|
+        array[index] = num * 2 if index.even? 
+    end
+end
+
+def format_to_single_digit(array)
+    array.map! { |num| num > 9 ? num - 9 : num }
+end
+
+def check_validity(array)
+    array.sum % 10 == 0
+end
+
+def response(boolean, cc_num)
+    if boolean == true
         "The number #{cc_num} is valid!"
     else
         "The number #{cc_num} is invalid!"
@@ -44,7 +67,7 @@ end
 ## If it is valid, print "The number [card number] is valid!"
 ## If it is invalid, print "The number [card number] is invalid!"
 
-# p luhn_algorithm(card_number)
+p luhn_algorithm(card_number)
 
 #Valid:
 test1 = 5541808923795240
@@ -72,17 +95,39 @@ class Credit_card
     end
 
     def is_valid?
-        card_number_arr = @card_number.to_i.digits 
-        card_number_arr.each_with_index do |num,index|
-            card_number_arr[index] = num * 2 if index.odd? 
-        end
-        card_number_arr.map! { |num| num > 9 ? num - 9 : num }
-        card_number_arr.sum % 10 == 0
+      luhn_algorithm(@card_number)
     end
 
     def last_four
         arr = @card_number.chars 
         [arr[-4],arr[-3],arr[-2],arr[-1]].join('')
+    end
+
+    def luhn_algorithm(cc_num)
+        formatted_cc_num = format(cc_num)
+        adjusted_cc_num = double_every_other_index_position(formatted_cc_num)
+        re_adjusted_cc_num = format_to_single_digit(adjusted_cc_num)
+        cc_check = check_validity(re_adjusted_cc_num)
+    end
+    
+    def format(card_number)
+        card_number.chars.map do |num|
+            num.to_i
+        end
+    end
+    
+    def double_every_other_index_position(array)
+        array.each_with_index do |num,index|
+            array[index] = num * 2 if index.even? 
+        end
+    end
+    
+    def format_to_single_digit(array)
+        array.map! { |num| num > 9 ? num - 9 : num }
+    end
+    
+    def check_validity(array)
+        array.sum % 10 == 0
     end
 end
 
